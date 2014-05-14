@@ -1,6 +1,7 @@
 package Ticker;
 
 use CL;
+use Conf;
 use Ex;
 
 use base qw(CL::Timer);
@@ -40,12 +41,16 @@ sub run($) {
   my Ticker $self=shift;
   if ($self->{state}==1) {
     $self->init($self->{when}+10);
-    CL::msg("TICK in 10 seconds");
+    if ($Conf::ticker_msg) {
+      CL::msg("TICK in 10 seconds");
+    }
     ::call_hook('pretick');
     $self->{state}=2;
   } elsif ($self->{state}==2) {
     $self->init($self->{when}+$self->{interval}-10);
-    CL::msg("TICK");
+    if ($Conf::ticker_msg) {
+      CL::msg("TICK");
+    }
     ::call_hook('tick');
     $self->{state}=1;
   }
